@@ -37,7 +37,7 @@ if __name__ == '__main__':
     treniOrario=trainStatus.checkTrainList(treni, "S01640")
     for x in treniOrario:
         print(x)
-    
+    #ciaoTommaso
 	
         
     
