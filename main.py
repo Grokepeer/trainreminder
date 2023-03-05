@@ -27,17 +27,23 @@ def getTreni(stA, stB, ts, n):
     n=min(n, len(allTrains["soluzioni"]))
     for n in range(n):
         treni.append(allTrains["soluzioni"][n]["vehicles"][0]["numeroTreno"])
-    return treni       
+    return treni  
+
+def getFilteredList(stA, stB, n):
+    api=viaggiatreno.API()    
+    ts=format_timestamp(time.time()-900)#get timestamp of 15 minutes ago
+    treni=getTreni(stA, stB, ts, n)#find the first 15 trains on this track
+    treniOrario=trainStatus.checkTrainList(treni, "S01640")
+    treniOrario=trainStatus.filterTrainList(treniOrario, time.time()) 
+    return treniOrario   
 	
 
 if __name__ == '__main__':
-    api=viaggiatreno.API()    
-    ts=format_timestamp(time.time()-900)#get timestamp of 15 minutes ago
-    treni=getTreni(1640, 1039, ts, 5)#find the first 15 trains on this track
-    treniOrario=trainStatus.checkTrainList(treni, "S01640")
-    treniOrario=trainStatus.filterTrainList(treniOrario, time.time())
-    for x in treniOrario:
-        print(x)
+    api=viaggiatreno.API()
+    trains=getFilteredList(1640, 1039, 5)
+    
+
+    
     #ciaoTommaso
 	
         
