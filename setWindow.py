@@ -2,7 +2,7 @@
 #Written using PyQt6 Lib
 
 from __future__ import print_function
-from PyQt6.QtWidgets import QApplication, QWidget, QMainWindow, QVBoxLayout, QToolBar, QLabel, QHBoxLayout
+from PyQt6.QtWidgets import QApplication, QWidget, QMainWindow, QVBoxLayout, QToolBar, QLabel, QHBoxLayout, QToolTip
 from PyQt6.QtGui import QPalette, QColor, QAction, QFont, QIcon
 from PyQt6.QtCore import Qt, QSize
 import sys
@@ -51,7 +51,10 @@ app.setFont(QFont("Fira Code", 30))
 window = QMainWindow()
 window.setWindowTitle("Orari Certosa")
 
+QToolTip.setFont(QFont("Fira Code", 8))
+
 toolbar = QToolBar("My main toolbar")
+toolbar.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextBesideIcon)
 toolbar.setIconSize(QSize(24,24))
 toolbar.setFont(QFont("Fira Code", 10))
 window.addToolBar(toolbar)
