@@ -50,6 +50,7 @@ app.setFont(QFont("Fira Code", 30))
 
 window = QMainWindow()
 window.setWindowTitle("Orari Certosa")
+window.setWindowIcon(QIcon("icons\\train.png"))
 
 QToolTip.setFont(QFont("Fira Code", 8))
 
