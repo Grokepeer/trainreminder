@@ -1,4 +1,4 @@
-
+#Developers: Federico De Rocco, Tommaso Bertelli
 
 from __future__ import print_function
 
@@ -18,11 +18,15 @@ def checkTrain(trainID, stationFullID):
 	apiReport=getTrainStatus(trainID)
 	trainTime=dict()
 	trainTime["trainID"]=trainID
-	if apiReport['tipoTreno'] == 'ST' or apiReport['provvedimento'] == 1:
+
+	if apiReport['tipoTreno'] == 'ST' or apiReport['provvedimento'] == 1: #train is cancelled
 		trainTime["error"]="Cancelled"
 		return trainTime
+	if apiReport["oraUltimoRilevamento"] == None:	#train is not departed yet
+		trainTime["error"]="Not departed"
+		return trainTime
 	
-	for i in range(len(apiReport["fermate"])):
+	for i in range(len(apiReport["fermate"])): #get position of the station in the list
 		if apiReport["fermate"][i]["id"] == stationFullID:
 			break
 
@@ -33,9 +37,6 @@ def checkTrain(trainID, stationFullID):
 
 	return trainTime
 	
-
-
-
 
 def checkTrainList(trains, stationFullID):
 	listTrainTime=[]
