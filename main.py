@@ -9,7 +9,11 @@ import json
 import datetime
 import time
 import trainStatus
+import setWindow
 from TrainMonitor import viaggiatreno
+
+sW=setWindow
+api=viaggiatreno.API()
 
 def is_valid_timestamp(ts):
     return (ts is not None) and (ts > 0) and (ts < 2147483648000)
@@ -17,6 +21,12 @@ def is_valid_timestamp(ts):
 def format_timestamp(ts, fmt='%Y-%m-%dT%H:%M:%S'):
     if is_valid_timestamp(ts):
         return datetime.datetime.fromtimestamp(ts).strftime(fmt)
+    else:
+        return 'N/A'
+    
+def formatTimestampClock(ts, fmt='%H:%M'):
+    if is_valid_timestamp(ts):
+        return datetime.datetime.fromtimestamp(ts/1000).strftime(fmt)
     else:
         return 'N/A'
     
@@ -35,14 +45,41 @@ def getFilteredList(stA, stB, n):
     treni=getTreni(stA, stB, ts, n)#find the first 15 trains on this track
     treniOrario=trainStatus.checkTrainList(treni, "S01640")
     treniOrario=trainStatus.filterTrainList(treniOrario, time.time()) 
-    return treniOrario   
+    return treniOrario  
+
+def setRow(rowLayout, train):
+    trainWidget=[]
+    trainWidget.append(sW.QLabel(train["trainID"]))
+    if "error" in train:
+        trainWidget.append(sW.QLabel(train["error"]))
+        trainWidget.append(sW.QLabel("--"))
+        if train["error"]=="Not departed":
+            trainWidget.append(sW.QLabel(formatTimestampClock(train["expectedStation"])))
+        else:
+            trainWidget.append(sW.QLabel("--"))
+        
+    else:
+        trainWidget.append(sW.QLabel(train["lastStation"]))
+        trainWidget.append(sW.QLabel(formatTimestampClock(train["lastTime"])))
+        trainWidget.append(sW.QLabel(formatTimestampClock(train["expectedStation"])))
+    
+    for x in trainWidget:
+        trainWidget.setAlignment(sW.Qt.AlignmentFlag.AlignCenter)
+        
+    for x in trainWidget:
+        rowLayout.addWidget(x)
+        
+    return
+    
+    
 	
 
 if __name__ == '__main__':
-    api=viaggiatreno.API()
+    
     trains=getFilteredList(1640, 1039, 5)
     
-
+    
+    sW.rows
     
     #ciaoTommaso
 	
