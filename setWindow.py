@@ -3,8 +3,8 @@
 
 from __future__ import print_function
 from PyQt6.QtWidgets import QApplication, QWidget, QMainWindow, QVBoxLayout, QToolBar, QLabel, QHBoxLayout
-from PyQt6.QtGui import QPalette, QColor, QAction, QFont
-from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QPalette, QColor, QAction, QFont, QIcon
+from PyQt6.QtCore import Qt, QSize
 import sys
 
 class Color(QWidget):
@@ -52,11 +52,14 @@ window = QMainWindow()
 window.setWindowTitle("Orari Certosa")
 
 toolbar = QToolBar("My main toolbar")
+toolbar.setIconSize(QSize(24,24))
 toolbar.setFont(QFont("Fira Code", 10))
 window.addToolBar(toolbar)
-buttonRefresh = QAction("Refresh", window)
+buttonRefresh = QAction(QIcon("icons\\arrow.png"),"Refresh", window)
 toolbar.addAction(buttonRefresh)
-buttonClose = QAction("Close", window)
+buttonSettings = QAction(QIcon("icons\\gear.png"), "Settings", window)
+toolbar.addAction(buttonSettings)
+buttonClose = QAction(QIcon("icons\\cross.png"),"Close", window)
 toolbar.addAction(buttonClose)
 
 rowsLayout=initRowsLayout(6)
