@@ -12,10 +12,14 @@ api=viaggiatreno.API()
 
 def getTrainStatus(trainID):
 	departures = api.call("cercaNumeroTrenoTrenoAutocomplete", trainID)
+	if len(departures)==0:
+		return None
 	return api.call("andamentoTreno", departures[0][1], trainID, departures[0][2])
 
 def checkTrain(trainID, stationFullID):
 	apiReport=getTrainStatus(trainID)
+	if apiReport==None:
+		return None
 	trainTime=dict()
 	trainTime["trainID"]=trainID
 
@@ -40,7 +44,9 @@ def checkTrain(trainID, stationFullID):
 def checkTrainList(trains, stationFullID):
 	listTrainTime=[]
 	for x in trains:
-		listTrainTime.append(checkTrain(x, stationFullID))
+		train=checkTrain(x, stationFullID)
+		if train != None:
+			listTrainTime.append(train)
 	return listTrainTime
 
 def filterTrainList(trains, ts):
