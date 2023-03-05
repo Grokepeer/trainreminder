@@ -62,6 +62,7 @@ def setRow(rowLayout, train):
         station=train["lastStation"].removeprefix("MILANO ")
         if len(station)>12:
             station = station[:-(len(station)-12)]
+            station= station.rstrip(" .")
             station=station+"."
         trainWidget.append(sW.QLabel(station))
         trainWidget.append(sW.QLabel(formatTimestampClock(train["tsLastStation"])))
@@ -93,9 +94,8 @@ def setRowsWindow(trains, rows, rowsLayout):
     rowsLayout[0].addWidget(departures)
     
     n=min(len(rowsLayout)-1, len(trains))
-    for x in range(1,n):
-        setRow(rowsLayout[x], trains[x-1])
-    
+    for x in range(0,n):
+        setRow(rowsLayout[x+1], trains[x])
     sW.assignLayoutRows(rows, rowsLayout)
     
     return

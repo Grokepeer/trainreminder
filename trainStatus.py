@@ -45,6 +45,7 @@ def checkTrainList(trains, stationFullID):
 
 def filterTrainList(trains, ts):
 	for x in trains:
-		if x["expectedStation"]<ts:
-			trains.remove(x)
+		if x["expectedStation"] != None:
+			if x["expectedStation"]<ts:
+				trains.remove(x)
 	return trains
