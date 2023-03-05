@@ -35,6 +35,7 @@ if __name__ == '__main__':
     ts=format_timestamp(time.time()-900)#get timestamp of 15 minutes ago
     treni=getTreni(1640, 1039, ts, 5)#find the first 15 trains on this track
     treniOrario=trainStatus.checkTrainList(treni, "S01640")
+    treniOrario=trainStatus.filterTrainList(treniOrario, time.time())
     for x in treniOrario:
         print(x)
     #ciaoTommaso

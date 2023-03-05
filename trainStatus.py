@@ -21,25 +21,30 @@ def checkTrain(trainID, stationFullID):
 
 	if apiReport['tipoTreno'] == 'ST' or apiReport['provvedimento'] == 1: #train is cancelled
 		trainTime["error"]="Cancelled"
-		return trainTime
+
 	if apiReport["oraUltimoRilevamento"] == None:	#train is not departed yet
 		trainTime["error"]="Not departed"
-		return trainTime
+
 	
-	for i in range(len(apiReport["fermate"])): #get position of the station in the list
+	for i in range(len(apiReport["fermate"])): #gets position of the station in the list
 		if apiReport["fermate"][i]["id"] == stationFullID:
 			break
 
 	trainTime["lastStation"]=apiReport["stazioneUltimoRilevamento"]
 	trainTime["tsLastStation"]=apiReport["oraUltimoRilevamento"]
 	trainTime["delay"]=apiReport["ritardo"]
-	trainTime["expectedCertosa"]=apiReport["fermate"][i]["partenza_teorica"]
+	trainTime["expectedStation"]=apiReport["fermate"][i]["partenza_teorica"]
 
 	return trainTime
 	
-
 def checkTrainList(trains, stationFullID):
 	listTrainTime=[]
 	for x in trains:
 		listTrainTime.append(checkTrain(x, stationFullID))
 	return listTrainTime
+
+def filterTrainList(trains, ts):
+	for x in trains:
+		if x["expectedStation"]<ts:
+			trains.remove(x)
+	return trains
