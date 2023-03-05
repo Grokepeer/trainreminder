@@ -19,20 +19,30 @@ class Color(QWidget):
         
 def initRows(n):
     rows=[]
-    for x in range(n):
-        rows.append(QWidget)
+    rows.append(Color("#fdd701"))
+    flag=0
+    if n%2==0:
+        flag=1
+        n=n-1
+    
+    for x in range(1,int((n+1)/2)):
+        rows.append(Color("#fee581"))
+        rows.append(Color("#565655"))
+    if flag==1:
+        rows.append(Color("#fee581"))
     return rows
     
 def initRowsLayout(n):
     rowsLayout=[]
+	
     for x in range(n):
-        rowsLayout.append(QHBoxLayout)
+        rowsLayout.append(QHBoxLayout())
     return rowsLayout   
 
 def assignLayoutRows(rows, rowsLayout):
     n=min(len(rows), len(rowsLayout))  
     for x in range(n):
-        rows[n].setLayout(rowsLayout[n])
+        rows[x].setLayout(rowsLayout[x])
     return
 
 
@@ -47,3 +57,4 @@ window.setWindowTitle("Orari Certosa")
 rowsLayout=initRowsLayout(6)
 rows=initRows(6)
 
+window.showFullScreen()

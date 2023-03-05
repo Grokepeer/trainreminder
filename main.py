@@ -60,27 +60,55 @@ def setRow(rowLayout, train):
         
     else:
         trainWidget.append(sW.QLabel(train["lastStation"]))
-        trainWidget.append(sW.QLabel(formatTimestampClock(train["lastTime"])))
+        trainWidget.append(sW.QLabel(formatTimestampClock(train["tsLastStation"])))
         trainWidget.append(sW.QLabel(formatTimestampClock(train["expectedStation"])))
     
     for x in trainWidget:
-        trainWidget.setAlignment(sW.Qt.AlignmentFlag.AlignCenter)
+        x.setAlignment(sW.Qt.AlignmentFlag.AlignCenter)
         
     for x in trainWidget:
         rowLayout.addWidget(x)
         
     return
+
+def setRowsWindow(trains, rows, rowsLayout):
+    trainID=sW.QLabel("Train ID")
+    trainID.setAlignment(sW.Qt.AlignmentFlag.AlignCenter)
+    rowsLayout[0].addWidget(trainID)
     
+    LastIn=sW.QLabel("LastTracking")
+    LastIn.setAlignment(sW.Qt.AlignmentFlag.AlignCenter)
+    rowsLayout[0].addWidget(LastIn)
     
-	
+    LastAt=sW.QLabel("Last At")
+    LastAt.setAlignment(sW.Qt.AlignmentFlag.AlignCenter)
+    rowsLayout[0].addWidget(LastAt)
+    
+    departures=sW.QLabel("Expected")
+    departures.setAlignment(sW.Qt.AlignmentFlag.AlignCenter)
+    rowsLayout[0].addWidget(departures)
+    
+    n=min(len(rowsLayout)-1, len(trains))
+    for x in range(1,n):
+        setRow(rowsLayout[x], trains[x-1])
+    
+    sW.assignLayoutRows(rows, rowsLayout)
+    
+    return
 
 if __name__ == '__main__':
     
-    trains=getFilteredList(1640, 1039, 5)
+    trains=getFilteredList(1039, 1640, 5)
+    setRowsWindow(trains, sW.rows, sW.rowsLayout)
+    layoutWindow=sW.QVBoxLayout()
     
+    for x in sW.rows:
+        layoutWindow.addWidget(x)
     
-    sW.rows
-    
+    widget=sW.QWidget()
+    widget.setLayout(layoutWindow)
+    sW.window.setCentralWidget(widget)
+    sW.app.exec()
     #ciaoTommaso
 	
         
