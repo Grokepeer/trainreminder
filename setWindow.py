@@ -27,7 +27,7 @@ def initRows(n):
     
     for x in range(1,int((n+1)/2)):
         rows.append(Color("#fee581"))
-        rows.append(Color("#565655"))
+        rows.append(Color("#7c7c7a"))
     if flag==1:
         rows.append(Color("#fee581"))
     return rows
@@ -45,14 +45,19 @@ def assignLayoutRows(rows, rowsLayout):
         rows[x].setLayout(rowsLayout[x])
     return
 
-
-
-
 app=QApplication(sys.argv)
 app.setFont(QFont("Fira Code", 30))
 
 window = QMainWindow()
 window.setWindowTitle("Orari Certosa")
+
+toolbar = QToolBar("My main toolbar")
+toolbar.setFont(QFont("Fira Code", 10))
+window.addToolBar(toolbar)
+buttonRefresh = QAction("Refresh", window)
+toolbar.addAction(buttonRefresh)
+buttonClose = QAction("Close", window)
+toolbar.addAction(buttonClose)
 
 rowsLayout=initRowsLayout(6)
 rows=initRows(6)

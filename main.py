@@ -59,7 +59,11 @@ def setRow(rowLayout, train):
             trainWidget.append(sW.QLabel("--"))
         
     else:
-        trainWidget.append(sW.QLabel(train["lastStation"]))
+        station=train["lastStation"].removeprefix("MILANO ")
+        if len(station)>12:
+            station = station[:-(len(station)-12)]
+            station=station+"."
+        trainWidget.append(sW.QLabel(station))
         trainWidget.append(sW.QLabel(formatTimestampClock(train["tsLastStation"])))
         trainWidget.append(sW.QLabel(formatTimestampClock(train["expectedStation"])))
     
