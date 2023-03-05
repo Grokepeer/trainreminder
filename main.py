@@ -77,7 +77,7 @@ def setRow(rowLayout, train):
     return
 
 def setRowsWindow(trains, rows, rowsLayout):
-    trainID=sW.QLabel("Train ID")
+    trainID=sW.QLabel("ID")
     trainID.setAlignment(sW.Qt.AlignmentFlag.AlignCenter)
     rowsLayout[0].addWidget(trainID)
     
