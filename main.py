@@ -60,10 +60,13 @@ def setRow(rowLayout, train):
         
     else:
         station=train["lastStation"].removeprefix("MILANO ")
-        if len(station)>12:
-            station = station[:-(len(station)-12)]
-            station= station.rstrip(" .")
-            station=station+"."
+        if len(station)>10:
+            station = station[:-(len(station)-10)]
+            if station[len(station)-1]==" ":
+                station= station.rstrip(" ")
+            else:
+                if station[len(station)-1]!=".":
+                    station=station+"."
         trainWidget.append(sW.QLabel(station))
         trainWidget.append(sW.QLabel(formatTimestampClock(train["tsLastStation"])))
         trainWidget.append(sW.QLabel(formatTimestampClock(train["expectedStation"])))
@@ -102,7 +105,7 @@ def setRowsWindow(trains, rows, rowsLayout):
 
 if __name__ == '__main__':
     
-    trains=getFilteredList(1039, 1640, 5)
+    trains=getFilteredList(1039, 1640, 6)
     setRowsWindow(trains, sW.rows, sW.rowsLayout)
     layoutWindow=sW.QVBoxLayout()
     
