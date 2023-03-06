@@ -111,18 +111,20 @@ def setRowsWindow(trains, rows, rowsLayout):
     
     return
 
-def refreshWindow(settings, rows, rowsLayout):
+def refreshWindow(settings):
+    sW.rows=sW.initRows(6)
+    sW.rowsLayout=sW.initRowsLayout(6)
     trains=getFilteredList(settings["departuresStationID"], settings["arrivalStationID"], 6)
-    setRowsWindow(trains, rows, rowsLayout)
+    setRowsWindow(trains, sW.rows, sW.rowsLayout)
     layoutWindow=sW.QVBoxLayout()
     
-    for x in rows:
+    for x in sW.rows:
         layoutWindow.addWidget(x)
     
     widget=sW.QWidget()
     widget.setLayout(layoutWindow)
     sW.w.setCentralWidget(widget)
-    sW.app.exec()
+    
     return
         
 
@@ -130,6 +132,7 @@ if __name__ == '__main__':
     trainStatus.delayMargin=settings["delayMargin"]
     trainStatus.delaySafe=settings["delaySafe"]
     sW.app.setFont(sW.QFont("Fira Code", settings["fontPts"]))
+    
 
     trains=getFilteredList(settings["departuresStationID"], settings["arrivalStationID"], 6)
     setRowsWindow(trains, sW.rows, sW.rowsLayout)
@@ -140,8 +143,12 @@ if __name__ == '__main__':
     
     widget=sW.QWidget()
     widget.setLayout(layoutWindow)
-    sW.window.setCentralWidget(widget)
+    sW.w.setCentralWidget(widget)
+    
+    
     sW.app.exec()
+    
+    
     #ciaoTommaso
 	
         

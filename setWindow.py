@@ -35,7 +35,7 @@ class trainWindow(QMainWindow):
 		toolbar.setFont(QFont("Fira Code", 10))
                 
 		buttonRefresh = QAction(QIcon("icons\\arrow.png"),"Refresh", self)
-		buttonRefresh.triggered.connect(self.onMyToolBarButtonClick)
+		buttonRefresh.triggered.connect(self.refreshTrains)
 		toolbar.addAction(buttonRefresh)
 
 
@@ -48,8 +48,8 @@ class trainWindow(QMainWindow):
                 
 		self.addToolBar(toolbar)
     
-	def onMyToolBarButtonClick(self, s):
-		print("click", s)
+	def refreshTrains(self):
+		main.refreshWindow(json.load(open("settings.json")))
 		return
         
 
