@@ -46,7 +46,7 @@ def assignLayoutRows(rows, rowsLayout):
     return
 
 app=QApplication(sys.argv)
-app.setFont(QFont("Fira Code", 30))
+app.setFont(QFont("Fira Code", 28))
 
 window = QMainWindow()
 window.setWindowTitle("Orari Certosa")

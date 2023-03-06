@@ -57,6 +57,8 @@ def setRow(rowLayout, train):
             trainWidget.append(sW.QLabel(formatTimestampClock(train["expectedStation"])))
         else:
             trainWidget.append(sW.QLabel("--"))
+        trainWidget.append(sW.QLabel("--"))
+
         
     else:
         station=train["lastStation"].removeprefix("MILANO ")
@@ -70,7 +72,8 @@ def setRow(rowLayout, train):
         trainWidget.append(sW.QLabel(station))
         trainWidget.append(sW.QLabel(formatTimestampClock(train["tsLastStation"])))
         trainWidget.append(sW.QLabel(formatTimestampClock(train["expectedStation"])))
-    
+        trainWidget.append(sW.QLabel(str(train["delay"])))
+
     for x in trainWidget:
         x.setAlignment(sW.Qt.AlignmentFlag.AlignCenter)
         
@@ -93,6 +96,10 @@ def setRowsWindow(trains, rows, rowsLayout):
     rowsLayout[0].addWidget(LastAt)
     
     departures=sW.QLabel("Expected")
+    departures.setAlignment(sW.Qt.AlignmentFlag.AlignCenter)
+    rowsLayout[0].addWidget(departures)
+    
+    departures=sW.QLabel("Delay")
     departures.setAlignment(sW.Qt.AlignmentFlag.AlignCenter)
     rowsLayout[0].addWidget(departures)
     

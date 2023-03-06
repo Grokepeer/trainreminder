@@ -9,6 +9,9 @@ from TrainMonitor import viaggiatreno
 
 api=viaggiatreno.API()
 
+delayMargin=5
+delaySafe=1
+
 
 def getTrainStatus(trainID):
 	departures = api.call("cercaNumeroTrenoTrenoAutocomplete", trainID)
@@ -38,8 +41,8 @@ def checkTrain(trainID, stationFullID):
 	trainTime["lastStation"]=apiReport["stazioneUltimoRilevamento"]
 	trainTime["tsLastStation"]=apiReport["oraUltimoRilevamento"]
 	trainTime["delay"]=apiReport["ritardo"]
-	if apiReport["ritardo"]>4:
-		trainTime["expectedStation"]=apiReport["fermate"][i]["partenza_teorica"]+apiReport["ritardo"]*60*1000
+	if apiReport["ritardo"]>=delayMargin:
+		trainTime["expectedStation"]=apiReport["fermate"][i]["partenza_teorica"]+(apiReport["ritardo"]-delaySafe)*60*1000
 	else:
 		trainTime["expectedStation"]=apiReport["fermate"][i]["partenza_teorica"]
 
@@ -56,6 +59,6 @@ def checkTrainList(trains, stationFullID):
 def filterTrainList(trains, ts):
 	for x in trains:
 		if x["expectedStation"] != None:
-			if int(x["expectedStation"]/1000)<int(ts):
+			if int(x["expectedStation"]/1000)+x["delay"]*60<int(ts):
 				trains.remove(x)
 	return trains
