@@ -121,7 +121,7 @@ def refreshWindow(settings, rows, rowsLayout):
     
     widget=sW.QWidget()
     widget.setLayout(layoutWindow)
-    sW.window.setCentralWidget(widget)
+    sW.w.setCentralWidget(widget)
     sW.app.exec()
     return
         
@@ -130,7 +130,6 @@ if __name__ == '__main__':
     trainStatus.delayMargin=settings["delayMargin"]
     trainStatus.delaySafe=settings["delaySafe"]
     sW.app.setFont(sW.QFont("Fira Code", settings["fontPts"]))
-    sW.initToolBar(refreshWindow)
 
     trains=getFilteredList(settings["departuresStationID"], settings["arrivalStationID"], 6)
     setRowsWindow(trains, sW.rows, sW.rowsLayout)

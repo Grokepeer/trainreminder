@@ -22,6 +22,38 @@ class Color(QWidget):
         palette.setColor(QPalette.ColorRole.Window, QColor(color))
         self.setPalette(palette)
         
+class trainWindow(QMainWindow):
+	def __init__(self):
+		super(trainWindow, self).__init__()
+                
+		self.setWindowTitle("Orari Certosa")
+		self.setWindowIcon(QIcon("icons\\train.png"))
+                
+		toolbar = QToolBar("My main toolbar")
+		toolbar.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextBesideIcon)
+		toolbar.setIconSize(QSize(24,24))
+		toolbar.setFont(QFont("Fira Code", 10))
+                
+		buttonRefresh = QAction(QIcon("icons\\arrow.png"),"Refresh", self)
+		buttonRefresh.triggered.connect(self.onMyToolBarButtonClick)
+		toolbar.addAction(buttonRefresh)
+
+
+		buttonSettings = QAction(QIcon("icons\\gear.png"), "Settings", self)
+		toolbar.addAction(buttonSettings)
+
+		buttonClose = QAction(QIcon("icons\\cross.png"),"Close", self)
+		buttonClose.triggered.connect(self.close)
+		toolbar.addAction(buttonClose)
+                
+		self.addToolBar(toolbar)
+    
+	def onMyToolBarButtonClick(self, s):
+		print("click", s)
+		return
+        
+
+        
 def initRows(n):
     rows=[]
     rows.append(Color("#fdd701"))
@@ -50,44 +82,22 @@ def assignLayoutRows(rows, rowsLayout):
         rows[x].setLayout(rowsLayout[x])
     return
 
+
 app=QApplication(sys.argv)
 app.setFont(QFont("Fira Code", 28))
 
-window = QMainWindow()
-window.setWindowTitle("Orari Certosa")
-window.setWindowIcon(QIcon("icons\\train.png"))
-
 QToolTip.setFont(QFont("Fira Code", 8))
 
-toolbar = QToolBar("My main toolbar")
-toolbar.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextBesideIcon)
-toolbar.setIconSize(QSize(24,24))
-toolbar.setFont(QFont("Fira Code", 10))
 
-
-
+w=trainWindow()
 
 rowsLayout=initRowsLayout(6)
 rows=initRows(6)
 
-window.showFullScreen()
+w.showFullScreen()
 
-def initToolBar(refreshFunction):
-	toolbar = QToolBar("My main toolbar")
-	toolbar.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextBesideIcon)
-	toolbar.setIconSize(QSize(24,24))
-	toolbar.setFont(QFont("Fira Code", 10))    
 
-	buttonRefresh = QAction(QIcon("icons\\arrow.png"),"Refresh", window)
-	buttonRefresh.triggered.connect(Qt.ConnectionType.AutoConnection, print("suca"))
-	toolbar.addAction(buttonRefresh)
 
-	buttonSettings = QAction(QIcon("icons\\gear.png"), "Settings", window)
-	toolbar.addAction(buttonSettings)
+   
 
-	buttonClose = QAction(QIcon("icons\\cross.png"),"Close", window)
-	toolbar.addAction(buttonClose)
-        
-	window.addToolBar(toolbar)
-	app.exec()
-	return
+# app.exec()
