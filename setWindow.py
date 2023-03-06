@@ -6,6 +6,11 @@ from PyQt6.QtWidgets import QApplication, QWidget, QMainWindow, QVBoxLayout, QTo
 from PyQt6.QtGui import QPalette, QColor, QAction, QFont, QIcon
 from PyQt6.QtCore import Qt, QSize
 import sys
+import main
+import json
+
+rows=[]
+rowsLayout=[]
 
 class Color(QWidget):
 
@@ -58,15 +63,31 @@ toolbar = QToolBar("My main toolbar")
 toolbar.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextBesideIcon)
 toolbar.setIconSize(QSize(24,24))
 toolbar.setFont(QFont("Fira Code", 10))
-window.addToolBar(toolbar)
-buttonRefresh = QAction(QIcon("icons\\arrow.png"),"Refresh", window)
-toolbar.addAction(buttonRefresh)
-buttonSettings = QAction(QIcon("icons\\gear.png"), "Settings", window)
-toolbar.addAction(buttonSettings)
-buttonClose = QAction(QIcon("icons\\cross.png"),"Close", window)
-toolbar.addAction(buttonClose)
+
+
+
 
 rowsLayout=initRowsLayout(6)
 rows=initRows(6)
 
 window.showFullScreen()
+
+def initToolBar(refreshFunction):
+	toolbar = QToolBar("My main toolbar")
+	toolbar.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextBesideIcon)
+	toolbar.setIconSize(QSize(24,24))
+	toolbar.setFont(QFont("Fira Code", 10))    
+
+	buttonRefresh = QAction(QIcon("icons\\arrow.png"),"Refresh", window)
+	buttonRefresh.triggered.connect(Qt.ConnectionType.AutoConnection, print("suca"))
+	toolbar.addAction(buttonRefresh)
+
+	buttonSettings = QAction(QIcon("icons\\gear.png"), "Settings", window)
+	toolbar.addAction(buttonSettings)
+
+	buttonClose = QAction(QIcon("icons\\cross.png"),"Close", window)
+	toolbar.addAction(buttonClose)
+        
+	window.addToolBar(toolbar)
+	app.exec()
+	return
