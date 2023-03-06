@@ -1,4 +1,4 @@
-#TODO: refresh loop, working buttons, settings menu,  better gui?, 
+#TODO: refresh loop, working buttons, settings menu,  better gui?
 #Developer: Federico De Rocco
 #Dependencies: trainMonitor, viaggiaTreno API
 

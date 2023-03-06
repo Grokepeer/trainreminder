@@ -34,10 +34,14 @@ def checkTrain(trainID, stationFullID):
 		if apiReport["fermate"][i]["id"] == stationFullID:
 			break
 
+
 	trainTime["lastStation"]=apiReport["stazioneUltimoRilevamento"]
 	trainTime["tsLastStation"]=apiReport["oraUltimoRilevamento"]
 	trainTime["delay"]=apiReport["ritardo"]
-	trainTime["expectedStation"]=apiReport["fermate"][i]["partenza_teorica"]
+	if apiReport["ritardo"]>4:
+		trainTime["expectedStation"]=apiReport["fermate"][i]["partenza_teorica"]+apiReport["ritardo"]*60*1000
+	else:
+		trainTime["expectedStation"]=apiReport["fermate"][i]["partenza_teorica"]
 
 	return trainTime
 	
