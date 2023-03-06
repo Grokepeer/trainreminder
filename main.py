@@ -1,4 +1,4 @@
-#TODO: creare ts, trovare ritardo ed ultima stazione di ogni treno + cancellato, passare a tommy per gui suca
+#TODO: refresh loop, working buttons, settings menu,  better gui?, 
 #Developer: Federico De Rocco
 #Dependencies: trainMonitor, viaggiaTreno API
 
