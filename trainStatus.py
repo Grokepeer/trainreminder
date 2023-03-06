@@ -50,8 +50,10 @@ def checkTrainList(trains, stationFullID):
 	return listTrainTime
 
 def filterTrainList(trains, ts):
+	print(int(ts))
 	for x in trains:
 		if x["expectedStation"] != None:
-			if x["expectedStation"]<ts:
+			print(x["expectedStation"]/1000)
+			if int(x["expectedStation"]/1000)<int(ts):
 				trains.remove(x)
 	return trains
