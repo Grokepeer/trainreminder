@@ -111,8 +111,12 @@ def setRowsWindow(trains, rows, rowsLayout):
     return
 
 if __name__ == '__main__':
+    settings=json.load(open("settings.json"))
+    trainStatus.delayMargin=settings["delayMargin"]
+    trainStatus.delaySafe=settings["delaySafe"]
+    sW.app.setFont(sW.QFont("Fira Code", settings["fontPts"]))
     
-    trains=getFilteredList(1039, 1640, 6)
+    trains=getFilteredList(settings["departuresStationID"], settings["arrivalStationID"], 6)
     setRowsWindow(trains, sW.rows, sW.rowsLayout)
     layoutWindow=sW.QVBoxLayout()
     
