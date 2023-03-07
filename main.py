@@ -4,9 +4,9 @@
 
 from __future__ import print_function
 
-import sys
 import json
 import datetime
+from threading import Timer
 import time
 import trainStatus
 import setWindow
@@ -17,6 +17,7 @@ api=viaggiatreno.API()
 jsonFile=open("settings.json")
 settings=json.load(jsonFile)
 jsonFile.close()
+trains=[]
 
 def is_valid_timestamp(ts):
     return (ts is not None) and (ts > 0) and (ts < 2147483648000)
@@ -43,7 +44,6 @@ def getTreni(stA, stB, ts, n):
     return treni  
 
 def getFilteredList(stA, stB, n):
-    api=viaggiatreno.API()    
     ts=format_timestamp(time.time()-900)#get timestamp of 15 minutes ago
     treni=getTreni(stA, stB, ts, n)#find the first 15 trains on this track
     treniOrario=trainStatus.checkTrainList(treni, "S01640")
@@ -114,20 +114,25 @@ def setRowsWindow(trains, rows, rowsLayout):
     return
 
 def refreshWindow(settings):
+    sW.trainMonitor.refreshing()
+    trains=getFilteredList(settings["departuresStationID"], settings["arrivalStationID"], 6)
+    refreshWindowSettings(settings, trains)
+    sW.trainMonitor.setTrains(trains)
+    sW.trainMonitor.white()
+    return
+
+def refreshWindowSettings(settings, trains):
     sW.rows=sW.initRows(6)
     sW.rowsLayout=sW.initRowsLayout(6)
-    trains=getFilteredList(settings["departuresStationID"], settings["arrivalStationID"], 6)
+
     setRowsWindow(trains, sW.rows, sW.rowsLayout)
     layoutWindow=sW.QVBoxLayout()
     
+
     for x in sW.rows:
         layoutWindow.addWidget(x)
-    
-    widget=sW.QWidget()
-    widget.setLayout(layoutWindow)
-    sW.trainMonitor.setCentralWidget(widget)
-    sW.trainMonitor.setFont(sW.QFont("Fira Code", settings["fontPts"]))
-    
+
+    sW.trainMonitor.setNewLayout(layoutWindow)
     return
 
 def resetSettings():
@@ -144,6 +149,9 @@ if __name__ == '__main__':
     trains=getFilteredList(settings["departuresStationID"], settings["arrivalStationID"], 6)
     setRowsWindow(trains, sW.rows, sW.rowsLayout)
     layoutWindow=sW.QVBoxLayout()
+    
+    sW.trainMonitor.setTrains(trains)
+
     
     for x in sW.rows:
         layoutWindow.addWidget(x)

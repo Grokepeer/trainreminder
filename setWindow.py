@@ -2,15 +2,56 @@
 #Written using PyQt6 Lib
 
 from __future__ import print_function
-from PyQt6.QtWidgets import QApplication, QWidget, QMainWindow, QVBoxLayout, QToolBar, QLabel, QHBoxLayout, QToolTip, QLineEdit, QGroupBox, QPushButton
+from PyQt6.QtWidgets import QApplication, QWidget, QMainWindow, QVBoxLayout, QToolBar, QLabel, QHBoxLayout, QToolTip, QLineEdit, QGroupBox, QPushButton, QStatusBar
 from PyQt6.QtGui import QPalette, QColor, QAction, QFont, QIcon, QWindow, QIntValidator
-from PyQt6.QtCore import Qt, QSize
+from PyQt6.QtCore import Qt, QSize, QTimer
 import sys
 import main
 import json
 
 rows=[]
 rowsLayout=[]
+
+jsonFile=open("settings.json")
+settings=json.load(jsonFile)
+jsonFile.close()
+
+app=QApplication(sys.argv)
+app.setFont(QFont("Fira Code", 28))
+app.setWindowIcon(QIcon("icons\\train.png"))
+QToolTip.setFont(QFont("Fira Code", 8))
+
+
+
+class RefreshTimer(QTimer):
+	def __init__(self):
+		super(RefreshTimer, self).__init__()
+
+		self.timeout.connect(self.refreshWindow)
+		return
+
+	def refreshWindowSettings(self, trains):
+		rows=initRows(6)
+		rowsLayout=initRowsLayout(6)
+
+		main.setRowsWindow(trains, rows, rowsLayout)
+		layoutWindow=QVBoxLayout()
+    
+
+		for x in rows:
+			layoutWindow.addWidget(x)
+
+		trainMonitor.setNewLayout(layoutWindow)
+		return
+
+	def refreshWindow(self):
+		trainMonitor.refreshing()
+		trains=main.getFilteredList(settings["departuresStationID"], settings["arrivalStationID"], 6)
+		self.refreshWindowSettings(trains)
+		trainMonitor.setTrains(trains)
+		main.trains=trains
+		trainMonitor.white()
+		return
 
 class Color(QWidget):
 
@@ -23,11 +64,14 @@ class Color(QWidget):
         self.setPalette(palette)
         
 class trainWindow(QMainWindow):
+	trains=[]
 	def __init__(self):
 		super(trainWindow, self).__init__()
                 
 		self.setWindowTitle("Orari Certosa")
 		self.setWindowIcon(QIcon("icons\\train.png"))
+
+				
                 
 		toolbar = QToolBar("My main toolbar")
 		toolbar.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextBesideIcon)
@@ -62,6 +106,28 @@ class trainWindow(QMainWindow):
 	def showSettings(self):
 		trainSettings.show()
 		return
+	
+	def setTrains(self, trainsList):
+		self.trains=trainsList
+		return
+	
+	def setNewLayout(self, newLayout):
+		widget=QWidget()
+		widget.setLayout(newLayout)
+		self.setCentralWidget(widget)
+		return
+	
+	def refreshing(self):
+		#bar=QStatusBar(self)
+		#bar.addPermanentWidget(QLabel("Refreshing..."))
+		#self.setStatusBar(bar)
+		return
+	
+	def white(self):
+		bar=QStatusBar(self)
+		bar.setFont(QFont("Fira Code", 10))
+		self.setStatusBar(bar)
+		return
 
 class settingsWindow(QMainWindow):
 	fieldDeparturesStation=""
@@ -69,6 +135,8 @@ class settingsWindow(QMainWindow):
 	fieldDelayMargin=""
 	fieldDelaySafe=""
 	fieldFontPts=""
+
+	flagNeedsTrainsRefresh=0
 
 	def __init__(self):
 		super(settingsWindow, self).__init__()
@@ -213,24 +281,31 @@ class settingsWindow(QMainWindow):
 		jsonFile=open("settings.json", "w")
 		json.dump(settings, jsonFile)
 		jsonFile.close()
-
-		main.refreshWindow(settings)
+		if self.flagNeedsTrainsRefresh==1:
+			main.refreshWindow(settings)
+			self.flagNeedsTrainsRefresh=0
+		else:
+			main.refreshWindowSettings(settings, trainMonitor.trains)
 		self.close()
 		return
         
 	def editedDeparturesStation(self, s):
+		self.flagNeedsTrainsRefresh=1
 		self.fieldDeparturesStation=s
 		return
               
 	def editedArrivalStation(self, s):
+		self.flagNeedsTrainsRefresh=1
 		self.fieldArrivalStation=s
 		return
               
 	def editedDelayMargin(self, s):
+		self.flagNeedsTrainsRefresh=1
 		self.fieldDelayMargin=s
 		return
 	
 	def editedDelaySafe(self, s):
+		self.flagNeedsTrainsRefresh=1
 		self.fieldDelaySafe=s
 		return
 
@@ -274,14 +349,19 @@ def assignLayoutRows(rows, rowsLayout):
     return
 
 
-app=QApplication(sys.argv)
-app.setFont(QFont("Fira Code", 28))
-app.setWindowIcon(QIcon("icons\\train.png"))
-QToolTip.setFont(QFont("Fira Code", 8))
 
 
 trainMonitor=trainWindow()
 trainSettings=settingsWindow()
+
+trainMonitor.white()
+
+if(settings["refresh"]==1):
+	refreshTimer=RefreshTimer()
+
+refreshTimer.start(settings["refreshTime"]*60)
+
+
 
 rowsLayout=initRowsLayout(6)
 rows=initRows(6)
