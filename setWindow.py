@@ -65,15 +65,17 @@ class Color(QWidget):
         
 class trainWindow(QMainWindow):
 	trains=[]
+	statusBarRef=QStatusBar()
 	def __init__(self):
 		super(trainWindow, self).__init__()
-                
+
+		self.statusBar=QStatusBar()    
 		self.setWindowTitle("Orari Certosa")
 		self.setWindowIcon(QIcon("icons\\train.png"))
 
 				
                 
-		toolbar = QToolBar("My main toolbar")
+		toolbar = QToolBar("mainToolbar")
 		toolbar.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextBesideIcon)
 		toolbar.setIconSize(QSize(24,24))
 		toolbar.setFont(QFont("Fira Code", 10))
@@ -91,7 +93,11 @@ class trainWindow(QMainWindow):
 		buttonClose.triggered.connect(self.killApp)
 		toolbar.addAction(buttonClose)
                 
+		self.statusBarRef.addWidget(QLabel(""))
+		self.statusBarRef.setFont(QFont("Fira Code", 10))
+			
 		self.addToolBar(toolbar)
+		self.setStatusBar(self.statusBarRef)
     
 	def refreshTrains(self):
 		jsonFile=open("settings.json")
@@ -118,15 +124,12 @@ class trainWindow(QMainWindow):
 		return
 	
 	def refreshing(self):
-		#bar=QStatusBar(self)
-		#bar.addPermanentWidget(QLabel("Refreshing..."))
-		#self.setStatusBar(bar)
+		self.findChild(QStatusBar).findChild(QLabel).setText("Refreshing...")
+		self.refreshTrains()
 		return
 	
 	def white(self):
-		bar=QStatusBar(self)
-		bar.setFont(QFont("Fira Code", 10))
-		self.setStatusBar(bar)
+		self.findChild(QStatusBar).findChild(QLabel).setText("")
 		return
 
 class settingsWindow(QMainWindow):
@@ -359,7 +362,7 @@ trainMonitor.white()
 if(settings["refresh"]==1):
 	refreshTimer=RefreshTimer()
 
-refreshTimer.start(settings["refreshTime"]*60)
+refreshTimer.start(settings["refreshTime"]*1000)
 
 
 

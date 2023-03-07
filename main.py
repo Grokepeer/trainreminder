@@ -114,17 +114,14 @@ def setRowsWindow(trains, rows, rowsLayout):
     return
 
 def refreshWindow(settings):
-    sW.trainMonitor.refreshing()
     trains=getFilteredList(settings["departuresStationID"], settings["arrivalStationID"], 6)
     refreshWindowSettings(settings, trains)
     sW.trainMonitor.setTrains(trains)
-    sW.trainMonitor.white()
     return
 
 def refreshWindowSettings(settings, trains):
     sW.rows=sW.initRows(6)
     sW.rowsLayout=sW.initRowsLayout(6)
-
     setRowsWindow(trains, sW.rows, sW.rowsLayout)
     layoutWindow=sW.QVBoxLayout()
     
