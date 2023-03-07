@@ -1,7 +1,1 @@
-{
-	"departuresStationID": "1039",
-	"arrivalStationID": "1640",
-	"delayMargin": 5,
-	"delaySafe": 1,
-	"fontPts": 28
-}
+{"departuresStationID": "1039", "arrivalStationID": "1640", "delayMargin": 5, "delaySafe": 1, "fontPts": 28}

@@ -14,7 +14,9 @@ from TrainMonitor import viaggiatreno
 
 sW=setWindow
 api=viaggiatreno.API()
-settings=json.load(open("settings.json"))
+jsonFile=open("settings.json")
+settings=json.load(jsonFile)
+jsonFile.close()
 
 def is_valid_timestamp(ts):
     return (ts is not None) and (ts > 0) and (ts < 2147483648000)
@@ -123,8 +125,13 @@ def refreshWindow(settings):
     
     widget=sW.QWidget()
     widget.setLayout(layoutWindow)
-    sW.w.setCentralWidget(widget)
+    sW.trainMonitor.setCentralWidget(widget)
+    sW.trainMonitor.setFont(sW.QFont("Fira Code", settings["fontPts"]))
     
+    return
+
+def resetSettings():
+    sW.trainSettings=sW.settingsWindow()
     return
         
 
@@ -143,7 +150,7 @@ if __name__ == '__main__':
     
     widget=sW.QWidget()
     widget.setLayout(layoutWindow)
-    sW.w.setCentralWidget(widget)
+    sW.trainMonitor.setCentralWidget(widget)
     
     
     sW.app.exec()
