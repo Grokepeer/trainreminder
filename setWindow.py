@@ -2,7 +2,7 @@
 #Written using PyQt6 Lib
 
 from __future__ import print_function
-from PyQt6.QtWidgets import QApplication, QWidget, QMainWindow, QVBoxLayout, QToolBar, QLabel, QHBoxLayout, QToolTip, QLineEdit, QGroupBox, QPushButton, QStatusBar
+from PyQt6.QtWidgets import QApplication, QWidget, QMainWindow, QVBoxLayout, QToolBar, QLabel, QHBoxLayout, QToolTip, QLineEdit, QGroupBox, QPushButton, QStatusBar, QCheckBox
 from PyQt6.QtGui import QPalette, QColor, QAction, QFont, QIcon, QWindow, QIntValidator
 from PyQt6.QtCore import Qt, QSize, QTimer
 from time import sleep
@@ -139,6 +139,7 @@ class settingsWindow(QMainWindow):
 	fieldDelayMargin=""
 	fieldDelaySafe=""
 	fieldFontPts=""
+	fieldRefresh=0
 
 	flagNeedsTrainsRefresh=0
 
@@ -157,7 +158,8 @@ class settingsWindow(QMainWindow):
 		mainWidget.setFont(QFont("Fira Code", 12))
                 
 		validDelay = QIntValidator(0, 60, self)
-		validFont = QIntValidator(2, 40, self) 
+		validFont = QIntValidator(2, 80, self) 
+		validRefreshTime = QIntValidator(1000, 300000)
        
 		settingsLayout=QVBoxLayout()
         
@@ -189,12 +191,29 @@ class settingsWindow(QMainWindow):
 		inputFontPts.setText(str(settings["fontPts"]))
 		inputFontPts.textEdited.connect(self.editedFontPts)
 		self.fieldFontPts=str(settings["fontPts"])
+
+		inputRefresh=QCheckBox()
+		if settings["refresh"]==1:
+			inputRefresh.setCheckState(Qt.CheckState.Checked)
+		else:
+			inputRefresh.setCheckState(Qt.CheckState.Unchecked)
+		inputRefresh.stateChanged.connect(self.editedRefresh)
+		self.fieldRefresh=settings["refresh"]
+
+		inputRefreshTime=QLineEdit()
+		inputRefreshTime.setText(str(settings["refreshTime"]))
+		inputRefreshTime.setValidator(validRefreshTime)
+		inputRefreshTime.textEdited.connect(self.editedRefreshTime)
+		self.fieldRefreshTime=settings["refreshTime"]
+
                 
 		labelDepartureStation=QLabel("Departures station ID:")
 		labelArrivalStation=QLabel("Arrival station ID:")
 		labelDelayMargin=QLabel("Minimum delay:")
 		labelDelaySafe=QLabel("Minutes removed:")
 		labelFontPts=QLabel("Font points:")
+		labelRefresh=QLabel("Automatic refresh:")
+		labelRefreshTime=QLabel("Seconds between refreshes:")
                 
 		departureStation=QHBoxLayout()
 		departureStation.addWidget(labelDepartureStation)
@@ -225,6 +244,18 @@ class settingsWindow(QMainWindow):
 		fontPts.addWidget(inputFontPts)
 		widgetFontPts = QWidget()
 		widgetFontPts.setLayout(fontPts)
+
+		refresh=QHBoxLayout()
+		refresh.addWidget(labelRefresh)
+		refresh.addWidget(inputRefresh)
+		widgetRefresh=QWidget()
+		widgetRefresh.setLayout(refresh)
+
+		refreshTime=QHBoxLayout()
+		refreshTime.addWidget(labelRefreshTime)
+		refreshTime.addWidget(inputRefreshTime)
+		widgetRefreshTime=QWidget()
+		widgetRefreshTime.setLayout(refreshTime)
                 
 
 		boxStationsSettings = QGroupBox()
@@ -249,6 +280,14 @@ class settingsWindow(QMainWindow):
 		fontSettings.addWidget(widgetFontPts)
 		boxFontSettings.setLayout(fontSettings)
 		settingsLayout.addWidget(boxFontSettings)
+
+		boxRefreshSettings=QGroupBox()
+		refreshSettings=QVBoxLayout()
+		boxRefreshSettings.setTitle("Refresh settings")
+		refreshSettings.addWidget(widgetRefresh)
+		refreshSettings.addWidget(widgetRefreshTime)
+		boxRefreshSettings.setLayout(refreshSettings)
+		settingsLayout.addWidget(boxRefreshSettings)
                 
 		buttonClose=QPushButton("Close", self)
 		buttonClose.clicked.connect(self.closeWindow)
@@ -281,6 +320,8 @@ class settingsWindow(QMainWindow):
 		settings["delayMargin"]=int(self.fieldDelayMargin)
 		settings["delaySafe"]=int(self.fieldDelaySafe)
 		settings["fontPts"]=int(self.fieldFontPts)
+		settings["refresh"]=int(self.fieldRefresh)
+		settings["refreshTime"]=int(self.fieldRefreshTime)
 		
 		jsonFile=open("settings.json", "w")
 		json.dump(settings, jsonFile)
@@ -315,7 +356,15 @@ class settingsWindow(QMainWindow):
 
 	def editedFontPts(self, s):
 		self.fieldFontPts=s
-		return		
+		return
+
+	def editedRefresh(self, n):
+		self.fieldRefresh=n
+		return
+
+	def editedRefreshTime(self, s):
+		self.fieldRefreshTime=s
+		return
 
         
         
@@ -353,27 +402,16 @@ def assignLayoutRows(rows, rowsLayout):
     return
 
 
-
-
 trainMonitor=trainWindow()
 trainSettings=settingsWindow()
 
 trainMonitor.white()
 
-if(settings["refresh"]==1):
+if(settings["refresh"]!=1):
 	refreshTimer=RefreshTimer()
-
-refreshTimer.start(settings["refreshTime"]*1000)
-
-
+	refreshTimer.start(settings["refreshTime"]*1000)
 
 rowsLayout=initRowsLayout(6)
 rows=initRows(6)
 
-#trainMonitor.showFullScreen()
-trainMonitor.show()
-
-
-   
-
-# app.exec()
+trainMonitor.showFullScreen()

@@ -1,4 +1,4 @@
-#TODO: add settings
+#TODO:
 #Developer: Federico De Rocco
 #Dependencies: trainMonitor, viaggiaTreno API
 
@@ -62,7 +62,6 @@ def setRow(rowLayout, train):
             trainWidget.append(sW.QLabel("--"))
         trainWidget.append(sW.QLabel("--"))
 
-        
     else:
         station=train["lastStation"].removeprefix("MILANO ")
         if len(station)>10:
@@ -128,7 +127,6 @@ def refreshWindowSettings(settings, trains):
     setRowsWindow(trains, sW.rows, sW.rowsLayout)
     layoutWindow=sW.QVBoxLayout()
     
-
     for x in sW.rows:
         layoutWindow.addWidget(x)
     sW.trainMonitor.setNewLayout(layoutWindow)
@@ -145,14 +143,12 @@ if __name__ == '__main__':
     trainStatus.delayMargin=settings["delayMargin"]
     trainStatus.delaySafe=settings["delaySafe"]
     sW.app.setFont(sW.QFont("Fira Code", settings["fontPts"]))
-    
 
     trains=getFilteredList(settings["departuresStationID"], settings["arrivalStationID"], 6)
     setRowsWindow(trains, sW.rows, sW.rowsLayout)
     layoutWindow=sW.QVBoxLayout()
     
     sW.trainMonitor.setTrains(trains)
-
     
     for x in sW.rows:
         layoutWindow.addWidget(x)
@@ -161,12 +157,4 @@ if __name__ == '__main__':
     widget.setLayout(layoutWindow)
     sW.trainMonitor.setCentralWidget(widget)
     
-    
     sW.app.exec()
-    
-    
-    #ciaoTommaso
-	
-        
-    
-    

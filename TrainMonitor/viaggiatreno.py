@@ -10,7 +10,8 @@ except ImportError:
     from urllib import urlopen  
     
 class Utils:
-    __path = os.path.join(os.path.dirname(__file__), 'vt_data', 'stationIDs.json')
+    #__path = os.path.join(os.path.dirname(__file__), 'vt_data', 'stationIDs.json')
+    __path="vt_data\\stationIDs.json"
     with open(__path, 'r') as fp:
         __stationsIDs = json.load(fp)
 
