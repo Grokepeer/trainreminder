@@ -5,6 +5,7 @@ from __future__ import print_function
 from PyQt6.QtWidgets import QApplication, QWidget, QMainWindow, QVBoxLayout, QToolBar, QLabel, QHBoxLayout, QToolTip, QLineEdit, QGroupBox, QPushButton, QStatusBar
 from PyQt6.QtGui import QPalette, QColor, QAction, QFont, QIcon, QWindow, QIntValidator
 from PyQt6.QtCore import Qt, QSize, QTimer
+from time import sleep
 import sys
 import main
 import json
@@ -46,6 +47,7 @@ class RefreshTimer(QTimer):
 
 	def refreshWindow(self):
 		trainMonitor.refreshing()
+		app.processEvents()
 		trains=main.getFilteredList(settings["departuresStationID"], settings["arrivalStationID"], 6)
 		self.refreshWindowSettings(trains)
 		trainMonitor.setTrains(trains)
@@ -93,8 +95,8 @@ class trainWindow(QMainWindow):
 		buttonClose.triggered.connect(self.killApp)
 		toolbar.addAction(buttonClose)
                 
-		self.statusBarRef.addWidget(QLabel(""))
 		self.statusBarRef.setFont(QFont("Fira Code", 10))
+		self.statusBar.showMessage("Milano Certosa")
 			
 		self.addToolBar(toolbar)
 		self.setStatusBar(self.statusBarRef)
@@ -124,12 +126,11 @@ class trainWindow(QMainWindow):
 		return
 	
 	def refreshing(self):
-		self.findChild(QStatusBar).findChild(QLabel).setText("Refreshing...")
-		self.refreshTrains()
+		self.findChild(QStatusBar).showMessage("Refreshing")
 		return
 	
 	def white(self):
-		self.findChild(QStatusBar).findChild(QLabel).setText("")
+		self.findChild(QStatusBar).showMessage("Milano Certosa")
 		return
 
 class settingsWindow(QMainWindow):
@@ -369,8 +370,8 @@ refreshTimer.start(settings["refreshTime"]*1000)
 rowsLayout=initRowsLayout(6)
 rows=initRows(6)
 
-trainMonitor.showFullScreen()
-
+#trainMonitor.showFullScreen()
+trainMonitor.show()
 
 
    

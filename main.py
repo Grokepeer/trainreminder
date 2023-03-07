@@ -1,4 +1,4 @@
-#TODO: add statusBar
+#TODO: add settings
 #Developer: Federico De Rocco
 #Dependencies: trainMonitor, viaggiaTreno API
 
@@ -120,6 +120,9 @@ def refreshWindow(settings):
     return
 
 def refreshWindowSettings(settings, trains):
+    sW.trainMonitor.refreshing()
+    sW.app.processEvents()
+    
     sW.rows=sW.initRows(6)
     sW.rowsLayout=sW.initRowsLayout(6)
     setRowsWindow(trains, sW.rows, sW.rowsLayout)
@@ -128,8 +131,9 @@ def refreshWindowSettings(settings, trains):
 
     for x in sW.rows:
         layoutWindow.addWidget(x)
-
     sW.trainMonitor.setNewLayout(layoutWindow)
+    
+    sW.trainMonitor.white()
     return
 
 def resetSettings():
