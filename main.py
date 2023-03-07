@@ -1,4 +1,4 @@
-#TODO: refresh loop, refresh gui without refreshing data
+#TODO: add statusBar
 #Developer: Federico De Rocco
 #Dependencies: trainMonitor, viaggiaTreno API
 
