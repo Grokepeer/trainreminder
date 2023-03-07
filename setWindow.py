@@ -61,7 +61,6 @@ class trainWindow(QMainWindow):
         
 	def showSettings(self):
 		trainSettings.show()
-		print("suca")
 		return
 
 class settingsWindow(QMainWindow):
@@ -79,7 +78,6 @@ class settingsWindow(QMainWindow):
 		settings=json.load(jsonFile)
 		jsonFile.close()
 		mainWidget=QWidget()
-		print(type(mainWidget))
         
 		self.setWindowTitle("Settings")
 		self.setWindowIcon(QIcon("icons\\gear.png"))
