@@ -126,7 +126,7 @@ class trainWindow(QMainWindow):
 		return
 	
 	def refreshing(self):
-		self.findChild(QStatusBar).showMessage("Refreshing")
+		self.findChild(QStatusBar).showMessage("Refreshing train list | Please Wait...")
 		return
 	
 	def white(self):
@@ -407,7 +407,7 @@ trainSettings=settingsWindow()
 
 trainMonitor.white()
 
-if(settings["refresh"]!=1):
+if(settings["refresh"]!=0):
 	refreshTimer=RefreshTimer()
 	refreshTimer.start(settings["refreshTime"]*1000)
 
