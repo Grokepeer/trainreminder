@@ -13,6 +13,10 @@ import json
 rows=[]
 rowsLayout=[]
 
+jsonStations=open("vt_data\\stationIDs.json")
+stationIDs=json.load(jsonStations)
+jsonStations.close()
+
 jsonFile=open("settings.json")
 settings=json.load(jsonFile)
 jsonFile.close()
@@ -68,6 +72,8 @@ class Color(QWidget):
 class trainWindow(QMainWindow):
 	trains=[]
 	statusBarRef=QStatusBar()
+	stationDeparturesName=""
+	stationArrivalName=""
 	def __init__(self):
 		super(trainWindow, self).__init__()
 
@@ -75,7 +81,8 @@ class trainWindow(QMainWindow):
 		self.setWindowTitle("Orari Certosa")
 		self.setWindowIcon(QIcon("icons\\train.png"))
 
-				
+		self.stationDeparturesName=stationIDs["S0"+settings["departuresStationID"]]
+		self.stationArrivalName=stationIDs["S0"+settings["arrivalStationID"]]	
                 
 		toolbar = QToolBar("mainToolbar")
 		toolbar.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextBesideIcon)
@@ -130,7 +137,7 @@ class trainWindow(QMainWindow):
 		return
 	
 	def white(self):
-		self.findChild(QStatusBar).showMessage("Milano Certosa")
+		self.findChild(QStatusBar).showMessage(self.stationDeparturesName + " -> "+self.stationArrivalName)
 		return
 
 class settingsWindow(QMainWindow):
@@ -193,7 +200,7 @@ class settingsWindow(QMainWindow):
 		self.fieldFontPts=str(settings["fontPts"])
 
 		inputRefresh=QCheckBox()
-		if settings["refresh"]==1:
+		if settings["refresh"]!=1:
 			inputRefresh.setCheckState(Qt.CheckState.Checked)
 		else:
 			inputRefresh.setCheckState(Qt.CheckState.Unchecked)
@@ -322,6 +329,9 @@ class settingsWindow(QMainWindow):
 		settings["fontPts"]=int(self.fieldFontPts)
 		settings["refresh"]=int(self.fieldRefresh)
 		settings["refreshTime"]=int(self.fieldRefreshTime)
+
+		trainMonitor.stationDeparturesName=stationIDs["S0"+settings["departuresStationID"]]
+		trainMonitor.stationArrivalName=stationIDs["S0"+settings["arrivalStationID"]]
 		
 		jsonFile=open("settings.json", "w")
 		json.dump(settings, jsonFile)
