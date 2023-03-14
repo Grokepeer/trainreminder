@@ -147,6 +147,7 @@ class settingsWindow(QMainWindow):
 	fieldDelaySafe=""
 	fieldFontPts=""
 	fieldRefresh=0
+	fieldFullScreen=0
 
 	flagNeedsTrainsRefresh=0
 
@@ -200,7 +201,7 @@ class settingsWindow(QMainWindow):
 		self.fieldFontPts=str(settings["fontPts"])
 
 		inputRefresh=QCheckBox()
-		if settings["refresh"]!=1:
+		if settings["refresh"]!=0:
 			inputRefresh.setCheckState(Qt.CheckState.Checked)
 		else:
 			inputRefresh.setCheckState(Qt.CheckState.Unchecked)
@@ -213,6 +214,16 @@ class settingsWindow(QMainWindow):
 		inputRefreshTime.textEdited.connect(self.editedRefreshTime)
 		self.fieldRefreshTime=settings["refreshTime"]
 
+		print(settings["fullScreen"])
+		inputFullScreen=QCheckBox()
+		if settings["fullScreen"]!=0:
+			inputFullScreen.setCheckState(Qt.CheckState.Checked)
+		else:
+			inputFullScreen.setCheckState(Qt.CheckState.Unchecked)
+		inputFullScreen.stateChanged.connect(self.editedFullScreen)
+		self.fieldFullScreen=settings["fullScreen"]
+
+
                 
 		labelDepartureStation=QLabel("Departures station ID:")
 		labelArrivalStation=QLabel("Arrival station ID:")
@@ -221,6 +232,7 @@ class settingsWindow(QMainWindow):
 		labelFontPts=QLabel("Font points:")
 		labelRefresh=QLabel("Automatic refresh:")
 		labelRefreshTime=QLabel("Seconds between refreshes:")
+		labelFullScreen=QLabel("Launch in full screen:")
                 
 		departureStation=QHBoxLayout()
 		departureStation.addWidget(labelDepartureStation)
@@ -263,6 +275,12 @@ class settingsWindow(QMainWindow):
 		refreshTime.addWidget(inputRefreshTime)
 		widgetRefreshTime=QWidget()
 		widgetRefreshTime.setLayout(refreshTime)
+
+		fullScreen=QHBoxLayout()
+		fullScreen.addWidget(labelFullScreen)
+		fullScreen.addWidget(inputFullScreen)
+		widgetFullScreen=QWidget()
+		widgetFullScreen.setLayout(fullScreen)
                 
 
 		boxStationsSettings = QGroupBox()
@@ -295,6 +313,13 @@ class settingsWindow(QMainWindow):
 		refreshSettings.addWidget(widgetRefreshTime)
 		boxRefreshSettings.setLayout(refreshSettings)
 		settingsLayout.addWidget(boxRefreshSettings)
+
+		boxScreenSettings=QGroupBox()
+		screenSettings=QVBoxLayout()
+		boxScreenSettings.setTitle("Screen settings")
+		screenSettings.addWidget(widgetFullScreen)
+		boxScreenSettings.setLayout(screenSettings)
+		settingsLayout.addWidget(boxScreenSettings)
                 
 		buttonClose=QPushButton("Close", self)
 		buttonClose.clicked.connect(self.closeWindow)
@@ -329,6 +354,7 @@ class settingsWindow(QMainWindow):
 		settings["fontPts"]=int(self.fieldFontPts)
 		settings["refresh"]=int(self.fieldRefresh)
 		settings["refreshTime"]=int(self.fieldRefreshTime)
+		settings["fullScreen"]=int(self.fieldFullScreen)
 
 		trainMonitor.stationDeparturesName=stationIDs["S0"+settings["departuresStationID"]]
 		trainMonitor.stationArrivalName=stationIDs["S0"+settings["arrivalStationID"]]
@@ -374,6 +400,10 @@ class settingsWindow(QMainWindow):
 
 	def editedRefreshTime(self, s):
 		self.fieldRefreshTime=s
+		return
+	
+	def editedFullScreen(self, n):
+		self.fieldFullScreen=n
 		return
 
         
@@ -424,4 +454,7 @@ if(settings["refresh"]!=0):
 rowsLayout=initRowsLayout(6)
 rows=initRows(6)
 
-trainMonitor.showFullScreen()
+if settings["fullScreen"]==0:
+	trainMonitor.show()
+else:
+	trainMonitor.showFullScreen()
