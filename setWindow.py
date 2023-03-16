@@ -148,6 +148,9 @@ class settingsWindow(QMainWindow):
 	fieldFontPts=""
 	fieldRefresh=0
 	fieldFullScreen=0
+	fieldShowWeather=0
+	fieldLatitude=0
+	fieldLongitude=0
 
 	flagNeedsTrainsRefresh=0
 
@@ -214,7 +217,6 @@ class settingsWindow(QMainWindow):
 		inputRefreshTime.textEdited.connect(self.editedRefreshTime)
 		self.fieldRefreshTime=settings["refreshTime"]
 
-		print(settings["fullScreen"])
 		inputFullScreen=QCheckBox()
 		if settings["fullScreen"]!=0:
 			inputFullScreen.setCheckState(Qt.CheckState.Checked)
@@ -223,6 +225,23 @@ class settingsWindow(QMainWindow):
 		inputFullScreen.stateChanged.connect(self.editedFullScreen)
 		self.fieldFullScreen=settings["fullScreen"]
 
+		inputShowWeather=QCheckBox()
+		if settings["showWeather"]!=0:
+			inputShowWeather.setCheckState(Qt.CheckState.Checked)
+		else:
+			inputShowWeather.setCheckState(Qt.CheckState.Unchecked)
+		inputShowWeather.stateChanged.connect(self.editedShowWeather)
+		self.fieldShowWeather=settings["showWeather"]
+
+		inputLatitude=QLineEdit()
+		inputLatitude.setText(str(settings["latitude"]))
+		inputLatitude.textEdited.connect(self.editedLatitude)
+		self.fieldLatitude=settings["latitude"]
+
+		inputLongitude=QLineEdit()
+		inputLongitude.setText(str(settings["longitude"]))
+		inputLongitude.textEdited.connect(self.editedLongitude)
+		self.fieldLongitude=settings["longitude"]
 
                 
 		labelDepartureStation=QLabel("Departures station ID:")
@@ -233,6 +252,9 @@ class settingsWindow(QMainWindow):
 		labelRefresh=QLabel("Automatic refresh:")
 		labelRefreshTime=QLabel("Seconds between refreshes:")
 		labelFullScreen=QLabel("Launch in full screen:")
+		labelShowWeather=QLabel("Show weather:")
+		labelLatitude=QLabel("Latitude")
+		labelLongitude=QLabel("Longitude")
                 
 		departureStation=QHBoxLayout()
 		departureStation.addWidget(labelDepartureStation)
@@ -281,6 +303,24 @@ class settingsWindow(QMainWindow):
 		fullScreen.addWidget(inputFullScreen)
 		widgetFullScreen=QWidget()
 		widgetFullScreen.setLayout(fullScreen)
+
+		showWeather=QHBoxLayout()
+		showWeather.addWidget(labelShowWeather)
+		showWeather.addWidget(inputShowWeather)
+		widgetShowWeather=QWidget()
+		widgetShowWeather.setLayout(showWeather)
+
+		latitude=QHBoxLayout()
+		latitude.addWidget(labelLatitude)
+		latitude.addWidget(inputLatitude)
+		widgetLatitude=QWidget()
+		widgetLatitude.setLayout(latitude)
+
+		longitude=QHBoxLayout()
+		longitude.addWidget(labelLongitude)
+		longitude.addWidget(inputLongitude)
+		widgetLongitude=QWidget()
+		widgetLongitude.setLayout(longitude)
                 
 
 		boxStationsSettings = QGroupBox()
@@ -320,6 +360,15 @@ class settingsWindow(QMainWindow):
 		screenSettings.addWidget(widgetFullScreen)
 		boxScreenSettings.setLayout(screenSettings)
 		settingsLayout.addWidget(boxScreenSettings)
+
+		boxWeatherSettings=QGroupBox()
+		weatherSettings=QVBoxLayout()
+		boxWeatherSettings.setTitle("Weather settings")
+		weatherSettings.addWidget(widgetShowWeather)
+		weatherSettings.addWidget(widgetLatitude)
+		weatherSettings.addWidget(widgetLongitude)
+		boxWeatherSettings.setLayout(weatherSettings)
+		settingsLayout.addWidget(boxWeatherSettings)
                 
 		buttonClose=QPushButton("Close", self)
 		buttonClose.clicked.connect(self.closeWindow)
@@ -355,6 +404,9 @@ class settingsWindow(QMainWindow):
 		settings["refresh"]=int(self.fieldRefresh)
 		settings["refreshTime"]=int(self.fieldRefreshTime)
 		settings["fullScreen"]=int(self.fieldFullScreen)
+		settings["showWeather"]=int(self.fieldShowWeather)
+		settings["latitude"]=float(self.fieldLatitude)
+		settings["longitude"]=float(self.fieldLongitude)
 
 		trainMonitor.stationDeparturesName=stationIDs["S0"+settings["departuresStationID"]]
 		trainMonitor.stationArrivalName=stationIDs["S0"+settings["arrivalStationID"]]
@@ -405,6 +457,18 @@ class settingsWindow(QMainWindow):
 	def editedFullScreen(self, n):
 		self.fieldFullScreen=n
 		return
+	
+	def editedShowWeather(self, n):
+		self.fieldShowWeather=n
+		return
+	
+	def editedLatitude(self, n):
+		self.fieldLatitude=n
+		return
+	
+	def editedLongitude(self, n):
+		self.fieldLongitude=n
+		return
 
         
         
@@ -444,6 +508,9 @@ def assignLayoutRows(rows, rowsLayout):
 
 trainMonitor=trainWindow()
 trainSettings=settingsWindow()
+
+trainSettings.resize(380, trainSettings.height())
+trainMonitor.setMinimumSize(1100,700)
 
 trainMonitor.white()
 
