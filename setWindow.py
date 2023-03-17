@@ -2,9 +2,9 @@
 #Written using PyQt6 Lib
 
 from __future__ import print_function
-from PyQt6.QtWidgets import QApplication, QWidget, QMainWindow, QVBoxLayout, QToolBar, QLabel, QHBoxLayout, QToolTip, QLineEdit, QGroupBox, QPushButton, QStatusBar, QCheckBox
-from PyQt6.QtGui import QPalette, QColor, QAction, QFont, QIcon, QIntValidator, QCloseEvent, QPixmap
-from PyQt6.QtCore import Qt, QSize, QTimer
+from PyQt6.QtWidgets import QApplication, QWidget, QMainWindow, QVBoxLayout, QToolBar, QLabel, QHBoxLayout, QToolTip, QLineEdit, QGroupBox, QPushButton, QStatusBar, QCheckBox, QLayout
+from PyQt6.QtGui import QPalette, QColor, QAction, QFont, QIcon, QIntValidator, QCloseEvent, QPixmap, QScreen, QGuiApplication
+from PyQt6.QtCore import Qt, QSize, QTimer, QRect
 import sys
 import main
 import json
@@ -68,15 +68,22 @@ class Weather(QWidget):
 		icons=[]
 		labels=[]
 		widgetLayouts=[]
+		filePaths=[]
 		self.layout=QHBoxLayout()
-
+		self.layout.setSpacing(int(QGuiApplication.primaryScreen().geometry().width()*0.15))
 		for i in range(0,4):
 			icons.append(QLabel())
 
-		icons[0].setPixmap(QPixmap("icons\\high.png"))
-		icons[1].setPixmap(QPixmap("icons\\low.png"))
-		icons[2].setPixmap(QPixmap("icons\\rain.png"))
-		icons[3].setPixmap(QPixmap("icons\\wind.png"))
+
+
+		filePaths.append("icons\\high.png")
+		filePaths.append("icons\\low.png")
+		filePaths.append("icons\\rain.png")
+		filePaths.append("icons\\wind.png")
+
+		for i in range(0,4):
+			pixmap=QPixmap(filePaths[i])
+			icons[i].setPixmap(pixmap.scaled(32, 32))
 
 		labels.append(QLabel(str(data["apparentTemperatureMax"])+"°C"))
 		labels.append(QLabel(str(data["apparentTemperatureMin"])+"°C"))
@@ -88,12 +95,23 @@ class Weather(QWidget):
 
 		for i in range(0, 4):
 			widgets.append(QWidget())
+			widgets[i].setFont(QFont("Fira Code", int(settings["fontPts"]*0.75)))
+
+		maxSize=QSize()
+		maxSize.setHeight(int(QGuiApplication.primaryScreen().geometry().height()/6))
+		maxSize.setWidth(300)
 		
+		
+
 		for i in range(0, 4):
+			widgetLayouts[i].setSpacing(3)
 			widgetLayouts[i].addWidget(icons[i])
 			widgetLayouts[i].addWidget(labels[i])
 			widgets[i].setLayout(widgetLayouts[i])
+			widgets[i].setMaximumSize(maxSize)
 			self.layout.addWidget(widgets[i])
+
+		#self.layout.setSizeConstraint(QLayout.SizeConstraint.SetMaximumSize)
 		return
 
 
