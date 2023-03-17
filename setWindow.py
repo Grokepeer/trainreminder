@@ -3,12 +3,12 @@
 
 from __future__ import print_function
 from PyQt6.QtWidgets import QApplication, QWidget, QMainWindow, QVBoxLayout, QToolBar, QLabel, QHBoxLayout, QToolTip, QLineEdit, QGroupBox, QPushButton, QStatusBar, QCheckBox
-from PyQt6.QtGui import QPalette, QColor, QAction, QFont, QIcon, QWindow, QIntValidator
+from PyQt6.QtGui import QPalette, QColor, QAction, QFont, QIcon, QIntValidator, QCloseEvent, QPixmap
 from PyQt6.QtCore import Qt, QSize, QTimer
-from time import sleep
 import sys
 import main
 import json
+import weatherStatus
 
 rows=[]
 rowsLayout=[]
@@ -25,6 +25,8 @@ app=QApplication(sys.argv)
 app.setFont(QFont("Fira Code", 28))
 app.setWindowIcon(QIcon("icons\\train.png"))
 QToolTip.setFont(QFont("Fira Code", 8))
+
+weatherAPI=weatherStatus.weatherAPI(settings)
 
 
 
@@ -58,6 +60,44 @@ class RefreshTimer(QTimer):
 		main.trains=trains
 		trainMonitor.white()
 		return
+	
+class Weather(QWidget):
+	def __init__(self, data):
+		self.data=data
+		widgets=[]
+		icons=[]
+		labels=[]
+		widgetLayouts=[]
+		self.layout=QHBoxLayout()
+
+		for i in range(0,4):
+			icons.append(QLabel())
+
+		icons[0].setPixmap(QPixmap("icons\\high.png"))
+		icons[1].setPixmap(QPixmap("icons\\low.png"))
+		icons[2].setPixmap(QPixmap("icons\\rain.png"))
+		icons[3].setPixmap(QPixmap("icons\\wind.png"))
+
+		labels.append(QLabel(str(data["apparentTemperatureMax"])+"°C"))
+		labels.append(QLabel(str(data["apparentTemperatureMin"])+"°C"))
+		labels.append(QLabel(str(data["precipitation"])+"mm "+str(data["precipitationProbability"])+"%"))
+		labels.append(QLabel(str(data["windspeedMax"])+"km/h"))
+
+		for i in range(0, 4):
+			widgetLayouts.append(QHBoxLayout())
+
+		for i in range(0, 4):
+			widgets.append(QWidget())
+		
+		for i in range(0, 4):
+			widgetLayouts[i].addWidget(icons[i])
+			widgetLayouts[i].addWidget(labels[i])
+			widgets[i].setLayout(widgetLayouts[i])
+			self.layout.addWidget(widgets[i])
+		return
+
+
+
 
 class Color(QWidget):
 
@@ -107,6 +147,10 @@ class trainWindow(QMainWindow):
 			
 		self.addToolBar(toolbar)
 		self.setStatusBar(self.statusBarRef)
+
+
+		self.weatherRow=Weather(weatherAPI.callFiltered(settings))
+		return
     
 	def refreshTrains(self):
 		jsonFile=open("settings.json")
@@ -139,6 +183,10 @@ class trainWindow(QMainWindow):
 	def white(self):
 		self.findChild(QStatusBar).showMessage(self.stationDeparturesName + " -> "+self.stationArrivalName)
 		return
+	
+	def closeEvent(self, a0: QCloseEvent) -> None:
+		app.exit()
+		return super().closeEvent(a0)
 
 class settingsWindow(QMainWindow):
 	fieldDeparturesStation=""
@@ -500,9 +548,12 @@ def initRowsLayout(n):
     return rowsLayout   
 
 def assignLayoutRows(rows, rowsLayout):
-    n=min(len(rows), len(rowsLayout))  
+    n=min(len(rows), len(rowsLayout))
+    if settings["showWeather"]!=0:
+        rowsLayout[5]=trainMonitor.weatherRow.layout
     for x in range(n):
         rows[x].setLayout(rowsLayout[x])
+    
     return
 
 

@@ -12,6 +12,7 @@ import trainStatus
 import setWindow
 from TrainMonitor import viaggiatreno
 
+
 sW=setWindow
 api=viaggiatreno.API()
 jsonFile=open("settings.json")
@@ -108,7 +109,12 @@ def setRowsWindow(trains, rows, rowsLayout):
     n=min(len(rowsLayout)-1, len(trains))
     for x in range(0,n):
         setRow(rowsLayout[x+1], trains[x])
+        
+
     sW.assignLayoutRows(rows, rowsLayout)
+    
+    
+	
     
     return
 
