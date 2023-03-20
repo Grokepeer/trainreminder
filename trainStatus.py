@@ -1,4 +1,4 @@
-#Developers: Federico De Rocco, Tommaso Bertelli
+
 
 from __future__ import print_function
 

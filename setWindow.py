@@ -1,4 +1,3 @@
-#Developer: Federico De Rocco
 #Written using PyQt6 Lib
 
 from __future__ import print_function
