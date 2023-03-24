@@ -28,9 +28,9 @@ def checkTrain(trainID, stationFullID):
 
 	if apiReport['tipoTreno'] == 'ST' or apiReport['provvedimento'] == 1: #train is cancelled
 		trainTime["error"]="Cancelled"
-
-	if apiReport["oraUltimoRilevamento"] == None:	#train is not departed yet
-		trainTime["error"]="Not departed"
+	else:
+		if apiReport["oraUltimoRilevamento"] == None:	#train is not departed yet
+			trainTime["error"]="Not departed"
 
 	
 	for i in range(len(apiReport["fermate"])): #gets position of the station in the list
