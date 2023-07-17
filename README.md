@@ -1,5 +1,5 @@
 # trainreminder
-Boh raga sinceramente non dovreste usare sta cosa
+Boh raga sinceramente non dovreste usare sta cosa (SWAG)
 
 TrainMonitor è stato concesso da: https://github.com/roughconsensusandrunningcode/TrainMonitor
 
